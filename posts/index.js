@@ -14,20 +14,18 @@ app.get("/posts", (req, res) => {
   res.send(posts);
 });
 
-app.post("/posts", async (req, res) => {
+app.post("/posts/create", async (req, res) => {
   const id = randomBytes(4).toString("hex");
   const { title } = req.body;
 
   posts[id] = { id, title };
 
   await axios
-    .post("http://localhost:4005/events", {
+    .post("http://event-bus-srv:4005/events", {
       type: "postCreated",
       data: { id, title },
     })
     .catch((e) => console.log(e.message));
-;
-
   res.status(201).send(posts[id]);
 });
 
@@ -38,5 +36,6 @@ app.post("/events", (req, res) => {
 });
 
 app.listen(4000, () => {
+  console.log("v55");
   console.log("starting on 4000");
 });
